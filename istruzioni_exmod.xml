@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+<!--NOTICE: Please open this file in your web browser. If presented with a security warning, you may safely tell it to allow the blocked content.-->
+<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD.\nAlthough MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD.\nNo support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
+	<header>
+		<meta name="generator" content="MODX file generated with PP MODX Creator 1.0.1 by tumba25 (phpBB version)"/>
+		<license><![CDATA[http://opensource.org/licenses/gpl-license.php GNU General Public License v2]]></license>
+		<title lang="en"><![CDATA[tlist Mod]]></title>
+		<title lang="it"><![CDATA[Mod tlist]]></title>
+		<description lang="en"><![CDATA[This MOD adds tlist e tlistindex bbcodes in order to create topic containing the list of topic titles in forum.
+Only normal topics will be included in the list.
+MOD created for prosilver theme.]]></description>
+		<description lang="it"><![CDATA[Aggiunge i bbcode tlist e tlistindex per creare topic contenenti l'elenco dei titoli dei topic presenti nei forum.
+Saranno inclusi nell'elenco i soli topic normali.
+La mod e' stata creata solo per il tema prosilver.]]></description>
+		<author-notes lang="en"><![CDATA[This is the public version of the mod. Support for TAGs into topic titles was removed]]></author-notes>
+		<author-notes lang="it"><![CDATA[Questa e' la versione pubblica della mod. E' stato rimosso il supporto per i TAG compresi nel titolo dei topic]]></author-notes>
+		<author-group>
+			<author>
+				<realname><![CDATA[T@by]]></realname>
+				<username><![CDATA[T@by]]></username>
+				<homepage><![CDATA[http://taby.altervista.org/]]></homepage>
+			</author>
+		</author-group>
+		<mod-version>1.0.4</mod-version>
+		<installation>
+			<level>easy</level>
+			<time>300</time>
+			<target-version>3.0.8</target-version>
+		</installation>
+		<history>
+			<entry>
+				<date>2009-07-08</date>
+				<rev-version>0.1.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Initial version (reserved for IS)]]></change>
+				</changelog>
+				<changelog lang="it">
+					<change><![CDATA[Versione iniziale (riservata a IS)]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2010-11-04</date>
+				<rev-version>1.0.0</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[First public version]]></change>
+				</changelog>
+				<changelog lang="it">
+					<change><![CDATA[Prima versione pubblica]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2011-04-29</date>
+				<rev-version>1.0.1</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Minor corrections.
+Preview implemented.]]></change>
+				</changelog>
+				<changelog lang="it">
+					<change><![CDATA[Correzioni minori.
+Implementata Anteprima.]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2011-05-02</date>
+				<rev-version>1.0.2</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Added topic's author name.
+Limited to 3 the number of characters used for the listing.
+Multiforum support implemented.]]></change>
+				</changelog>
+				<changelog lang="it">
+					<change><![CDATA[Implementato nome autore dei topic.
+Limitato a 3 il numero di caratteri utilizzabili per generare l'indice.
+Implementato supporto multiforum.]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2011-05-03</date>
+				<rev-version>1.0.3</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[BUG Fix]]></change>
+				</changelog>
+				<changelog lang="it">
+					<change><![CDATA[BUG Fix]]></change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2011-05-04</date>
+				<rev-version>1.0.4</rev-version>
+				<changelog lang="en">
+					<change><![CDATA[Fixed SEO issue
+Added Topic creation date]]></change>
+				</changelog>
+				<changelog lang="it">
+					<change><![CDATA[Risolto problema SEO.
+Aggiunta data di creazione topic]]></change>
+				</changelog>
+			</entry>
+		</history>
+		<link-group>
+			<link type="parent" href="install.xml" lang="en">Manuale</link>
+		</link-group>
+	</header>
+	<action-group>
+		<copy>
+			<file from="root/styles/prosilver/theme/images/corners_left3.gif" to="styles/prosilver/theme/images/corners_left3.gif"/>
+			<file from="root/styles/prosilver/theme/images/corners_right3.gif" to="styles/prosilver/theme/images/corners_right3.gif"/>
+			<file from="root/images/icons/misc/empty.gif" to="images/icons/misc/empty.gif"/>
+		</copy>
+		<open src="posting.php">
+			<edit>
+				<find><![CDATA[	$message_parser->message		= utf8_normalize_nfc(request_var('message', '', true));]]></find>
+				<action type="after-add"><![CDATA[	// tlist MOD
+	$message_parser->message = FixTListTag($message_parser->message);
+	//-tlist MOD]]></action>
+			</edit>
+		</open>
+		<open src="viewtopic.php">
+			<edit>
+				<find><![CDATA[	$message = bbcode_nl2br($message);]]></find>
+				<action type="before-add"><![CDATA[	// tlist MOD
+	$message = tlist_process($message);
+	//-tlist MOD]]></action>
+			</edit>
+		</open>
+		<open src="includes/message_parser.php">
+			<edit>
+				<find><![CDATA[$this->message = bbcode_nl2br($this->message);]]></find>
+				<action type="before-add"><![CDATA[	// tlist MOD
+	$this->message = tlist_process($this->message);
+	//-tlist MOD]]></action>
+			</edit>
+		</open>	
+		<open src="includes/functions_content.php">
+			<edit>
+				<find><![CDATA[?>]]></find>
+				<action type="before-add"><![CDATA[// tlist MOD
+function tlist_process($text)
+{
+global $forum_id;
+	//Jumpstation
+	preg_match_all("#\[tlistindex\](.*?)\[/tlistindex\]#", $text, $matches);
+	$ctr = 0;
+	$res = "";
+	foreach($matches[0] as $key=>$val)
+	{
+		$ctr++;
+		$tlist_str = topic_list_index($matches[1][$key]);
+		$text = str_replace($val, $tlist_str, $text);
+	}
+	//List
+	$text = str_replace("[tlist]", "[tlist=".$forum_id."]", $text);
+	preg_match_all("#\[tlist\=(.*?)\](.*?)\|(.*?)\[/tlist\]#", $text, $matches);
+	$ctr = 0;
+	$res = "";
+	foreach($matches[0] as $key=>$val)
+	{
+		$ctr++;
+		$tlist_str = tlist_build($matches[1][$key], $matches[2][$key], $matches[3][$key]);
+		$text = str_replace($val, $tlist_str, $text);
+	}
+	return($text);
+}
+
+function topic_list_index($parms)
+{
+global $phpbb_root_path, $forum_id, $topic_id;
+
+	if (empty($parms))
+		$parms = "0|";
+	$parms_array = explode ("|", $parms);
+	$res = ''; // here can be added a message like 'Jump to: '
+	foreach ($parms_array as $key => $row)
+	{
+		$tmp = ' <a href="'.append_sid("{$phpbb_root_path}viewtopic.php", 'f='.$forum_id.'&t='.$topic_id).'#tl_{TITLE}">{TITLE}</a>';
+		$row = str_replace(" ", "", $row);
+		$res .= str_replace("{TITLE}", $row, $tmp);
+	}
+	return $res;
+}
+
+function tlist_build($forum, $inizio, $fine)
+{
+global $db, $icons, $phpbb_root_path, $config, $user, $forum_id, $topic_id;
+
+	if (empty($forum))
+		return '';
+
+	$inizio = strtoupper($inizio);
+	if (empty($inizio))
+		$inizio = '0';
+
+	$fine = strtoupper($fine);
+	if (empty($fine))
+		$fine = $inizio;
+
+	$sql_start = "UCASE(LEFT(TRIM(LEADING '[' FROM TRIM(topic_title)), ".strlen($inizio).")) >= '$inizio'";
+	$sql_end = "UCASE(LEFT(TRIM(LEADING '[' FROM TRIM(topic_title)), ".strlen($fine).")) <= '$fine'";
+	//Numeric cases
+	if ( substr($inizio, 0, 1) == "#" )
+	{
+		$sql_start = "LEFT(TRIM(LEADING '[' FROM TRIM(topic_title)), 1) >= '0'";
+		$sql_end = "LEFT(TRIM(LEADING '[' FROM TRIM(topic_title)), 1) <= '9'";
+		$fine = '';
+	}
+	if ( substr($fine, 0, 1) == "#" )
+		$sql_end = ""; //bah
+
+	// Other cases
+	if ( substr($inizio, 0, 1) == "@" )
+	{
+		$sql_start = "UCASE(TRIM(LEADING '[' FROM TRIM(topic_title))) NOT REGEXP '^([A-Z|0-9])'";
+		$sql_end = "";
+		$fine = '';
+	}
+	$sql = 'SELECT topic_id, icon_id, topic_title,
+ 	       topic_poster, topic_first_poster_name, topic_first_poster_colour, topic_time
+ 	       FROM ' . TOPICS_TABLE . '
+	       WHERE ( forum_id IN ('.$forum.') AND topic_type = 0 AND topic_approved = 1 AND topic_moved_id = 0 )
+	       AND ( ' . $sql_start . (empty($sql_end) ? '' : ' AND ' . $sql_end ) . ' )
+	       ORDER BY topic_title';
+	$result = $db->sql_query($sql);
+	//Title
+	$ttitle = $inizio;
+	if ( $ttitle == '#' )
+		$ttitle = '0-9';
+	if ( $fine != $inizio && !empty($fine) )
+		$ttitle.=" - ".$fine;
+	$ttitle = strtoupper($ttitle);
+	$res = "";
+	$res .='<div class="panel" id="tlist"><div class="inner"><span class="corners-top"><span></span></span>';
+	$res .='<a name="tl_'.str_replace(" ", "", $ttitle).'" class="tlist">'.$ttitle.'</a><a href="'.append_sid("{$phpbb_root_path}viewtopic.php", 'f='.$forum_id.'&t='.$topic_id).'#wrap" class="top" style="float: right;">Top</a>';
+	$res .='<span class="corners-bottom"><span></span></span></div></div>';
+	$icon_prefix = '<img src="'."{$phpbb_root_path}{$config['icons_path']}/";
+	$no_topics = '<div style="margin-left: 16px;"> <i>-</i></div>';
+	while ($row = $db->sql_fetchrow($result))
+	{
+		// Topic author
+		// Change 'no_profile' to 'full' if you want the profile link
+		$topic_author = get_username_string('no_profile', $row['topic_poster'], $row['topic_first_poster_name'], $row['topic_first_poster_colour']);
+		// Topic time
+		$topic_time = $user->format_date($row['topic_time']);
+		
+		$no_topics = '';
+		$link = append_sid("{$phpbb_root_path}viewtopic.php", 't='.$row['topic_id']);
+		$cur_icon = $icon_prefix;
+		$cur_icon .= (!empty($icons[$row['icon_id']])) ? $icons[$row['icon_id']]['img'] : 'misc/empty.gif';
+		$cur_icon .='" alt="" />';
+		$res .= '<div style="float: left; width: 60%"><span style="vertical-align: middle;">'. $cur_icon.'</span> <a href='.$link.' title="">'.$row['topic_title'].'</a></div><div style="float: left; width: 20%;" class="tlist_author">'.$user->lang['POST_BY_AUTHOR'].' '.$topic_author.'</div><div class="tlist_time">'.$topic_time.'</div>';
+	}
+	$db->sql_freeresult($result);
+	return $res.$no_topics;
+}
+
+function fixTListTag($message)
+{
+global $forum_id;
+
+	// Find all the tlist tags - with or without boardid.
+	$message = str_replace("[tlist]", "[tlist=$forum_id]", $message);
+	preg_match_all('~(\[tlist(=.*?)\])(.*?)\|(.*?)\[/tlist\]~is', $message, $matches, PREG_PATTERN_ORDER);
+	$replaces = array();
+	foreach ($matches[0] as $match => $dummy)
+	{
+		$matches[2][$match] = preg_replace('/=*\s*/', '', $matches[2][$match]);
+		$boards = explode(",", $matches[2][$match]);
+
+		foreach ($boards as $id => $val){
+				if (!is_numeric($val))
+					unset($boards[$id]);
+		}
+		$matches[2][$match] = implode(",", $boards);
+		$desired_board = empty($matches[2][$match]) ? $forum_id : $matches[2][$match];
+
+		$inizio = substr($matches[3][$match], 0, 3);
+		$fine = substr($matches[4][$match], 0, 3);
+
+		$replaces[$matches[0][$match]]= '[tlist='.$desired_board.']'.$inizio.'|'.$fine.'[/tlist]';
+	}
+	// If any tlist tags were actually changed...
+	if (!empty($replaces))
+		$message = strtr($message, $replaces);
+
+	return $message;
+}
+//-tlist MOD]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/theme/content.css">
+			<edit>
+				<find><![CDATA[dl.pmlist dd {
+	margin-left: 61% !important;
+	margin-bottom: 2px;
+}]]></find>
+				<action type="after-add"><![CDATA[/* tlist MOD */
+#tlist span.corners-top {
+	background-image: url("{T_THEME_PATH}/images/corners_left3.gif");
+}
+#tlist span.corners-top span {
+	background-image: url("{T_THEME_PATH}/images/corners_right3.gif");
+}
+#tlist span.corners-bottom {
+	background-image: url("{T_THEME_PATH}/images/corners_left3.gif");
+}
+#tlist span.corners-bottom span {
+	background-image: url("{T_THEME_PATH}/images/corners_right3.gif");
+}
+.tlist{
+	font-size:1.7em;
+	font-weight: bold;
+	color: #115098;
+}
+.tlist_author{
+	font-size:85%;
+	color: #000000;
+}
+.tlist_time{
+	font-size:85%;
+	color: #000000;
+}
+/*-tlist MOD */]]></action>
+			</edit>
+		</open>
+		<diy-instructions lang="en"><![CDATA[[tlistindex]0-9|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z[/tlistindex]	create a jumpstation. Valid only if the lists are in a unique post
+[tlist]0|9[/tlist]	list titles beginning with numbers from 0 to 9
+[tlist]#|[/tlist]	list titles beginning with numbers from 0 to 9
+[tlist]A|[/tlist]	list titles beginning with A character
+[tlist]A|C[/tlist]	list titles beginning with charcters from A to C
+[tlist]@|[/tlist]	list titles beginning with characters other than 0-9 and A-Z
+
+Typical post in order to obtain full list:
+[tlistindex]0-9|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|@[/tlistindex]
+[tlist]#|[/tlist]
+[tlist]A|[/tlist]
+[tlist]B|[/tlist]
+[tlist]C|[/tlist]
+[tlist]D|[/tlist]
+[tlist]E|[/tlist]
+[tlist]F|[/tlist]
+[tlist]G|[/tlist]
+[tlist]H|[/tlist]
+[tlist]I|[/tlist]
+[tlist]J|[/tlist]
+[tlist]K|[/tlist]
+[tlist]L|[/tlist]
+[tlist]M|[/tlist]
+[tlist]N|[/tlist]
+[tlist]O|[/tlist]
+[tlist]P|[/tlist]
+[tlist]Q|[/tlist]
+[tlist]R|[/tlist]
+[tlist]S|[/tlist]
+[tlist]T|[/tlist]
+[tlist]U|[/tlist]
+[tlist]W|[/tlist]
+[tlist]V|[/tlist]
+[tlist]X|[/tlist]
+[tlist]Y|[/tlist]
+[tlist]Z|[/tlist]
+[tlist]@|[/tlist]]]></diy-instructions>
+		<diy-instructions lang="it"><![CDATA[[tlistindex]0-9|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z[/tlistindex]	crea la jumpstation. Valido solo se tutto l'elenco e' in post unico
+[tlist]0|9[/tlist]	elenca i titoli che iniziano con numeri da 0 a 9
+[tlist]#|[/tlist]	elenca i titoli che iniziano con numeri da 0 a 9
+[tlist]A|[/tlist]	elenca i titoli che iniziano con la sola lettera A
+[tlist]A|C[/tlist]	elenca i titoli che iniziano dalla lettera A alla lettera C
+[tlist]@|[/tlist]	elenca i titoli che iniziano con caratteri diversi da 0-9 e A-Z
+
+Post tipico per ottenere l'intera lista:
+[tlistindex]0-9|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|@[/tlistindex]
+[tlist]#|[/tlist]
+[tlist]A|[/tlist]
+[tlist]B|[/tlist]
+[tlist]C|[/tlist]
+[tlist]D|[/tlist]
+[tlist]E|[/tlist]
+[tlist]F|[/tlist]
+[tlist]G|[/tlist]
+[tlist]H|[/tlist]
+[tlist]I|[/tlist]
+[tlist]J|[/tlist]
+[tlist]K|[/tlist]
+[tlist]L|[/tlist]
+[tlist]M|[/tlist]
+[tlist]N|[/tlist]
+[tlist]O|[/tlist]
+[tlist]P|[/tlist]
+[tlist]Q|[/tlist]
+[tlist]R|[/tlist]
+[tlist]S|[/tlist]
+[tlist]T|[/tlist]
+[tlist]U|[/tlist]
+[tlist]W|[/tlist]
+[tlist]V|[/tlist]
+[tlist]X|[/tlist]
+[tlist]Y|[/tlist]
+[tlist]Z|[/tlist]
+[tlist]@|[/tlist]]]></diy-instructions>
+	</action-group>
+</mod>

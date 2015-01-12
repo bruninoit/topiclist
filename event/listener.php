@@ -61,6 +61,16 @@ return array(
 );	
 }
 
+public function setup($event)	{	
+//language start
+$lang_set_ext = $event['lang_set_ext'];
+		$lang_set_ext[] = array(
+			'ext_name' => 'staffit/topiclist',
+			'lang_set' => 'common',
+		);
+		$event['lang_set_ext'] = $lang_set_ext;
+}
+
 //controllata
 function tlist_viewtopic($text)
 {

@@ -62,7 +62,7 @@ return array(
 }
 
 //controllata
-global function tlist_viewtopic($text)
+function tlist_viewtopic($text)
 {
 global $forum_id;
 	//Jumpstation
@@ -88,7 +88,7 @@ global $forum_id;
 	}
 	return($text);
 }
-global function topic_list_index($parms)
+function topic_list_index($parms)
 {
 global $forum_id, $topic_id;
 	if (empty($parms))
@@ -97,13 +97,13 @@ global $forum_id, $topic_id;
 	$res = ''; // here can be added a message like 'Jump to: '
 	foreach ($parms_array as $key => $row)
 	{
-		$tmp = ' <a href="'.append_sid("{$phpbb_root_path}viewtopic.php", 'f='.$forum_id.'&t='.$topic_id).'#tl_{TITLE}">{TITLE}</a>';
+		$tmp = ' <a href="'.append_sid("{$this->root_path}viewtopic.php", 'f='.$forum_id.'&t='.$topic_id).'#tl_{TITLE}">{TITLE}</a>';
 		$row = str_replace(" ", "", $row);
 		$res .= str_replace("{TITLE}", $row, $tmp);
 	}
 	return $res;
 }
-global function tlist_build($forum, $inizio, $fine)
+function tlist_build($forum, $inizio, $fine)
 {
 global $forum_id, $topic_id;
 	if (empty($forum))
@@ -148,9 +148,9 @@ global $forum_id, $topic_id;
 	$ttitle = strtoupper($ttitle);
 	$res = "";
 	$res .='<div class="panel" id="tlist"><div class="inner"><span class="corners-top"><span></span></span>';
-	$res .='<a name="tl_'.str_replace(" ", "", $ttitle).'" class="tlist">'.$ttitle.'</a><a href="'.append_sid("{$phpbb_root_path}viewtopic.php", 'f='.$forum_id.'&t='.$topic_id).'#wrap" class="top" style="float: right;">Top</a>';
+	$res .='<a name="tl_'.str_replace(" ", "", $ttitle).'" class="tlist">'.$ttitle.'</a><a href="'.append_sid("{$this->root_path}viewtopic.php", 'f='.$forum_id.'&t='.$topic_id).'#wrap" class="top" style="float: right;">Top</a>';
 	$res .='<span class="corners-bottom"><span></span></span></div></div>';
-	$icon_prefix = '<img src="'."{$phpbb_root_path}{$config['icons_path']}/";
+	$icon_prefix = '<img src="'."{$this->root_path}{$config['icons_path']}/";
 	$no_topics = '<div style="margin-left: 16px;"> <i>-</i></div>';
 	while ($row = $this->db->sql_fetchrow($result))
 	{
@@ -163,7 +163,7 @@ global $forum_id, $topic_id;
 		$no_topics = '';
 		
 		//HELP!
-		$link = append_sid("{$phpbb_root_path}viewtopic.php", 't='.$row['topic_id']); 
+		$link = append_sid("{$this->root_path}viewtopic.php", 't='.$row['topic_id']); 
 		//HELP!
 		
 		
@@ -175,7 +175,7 @@ global $forum_id, $topic_id;
 	$this->db->sql_freeresult($result);
 	return $res.$no_topics;
 }
-global function fixTListTag($message)
+function fixTListTag($message)
 {
 global $forum_id;
 	// Find all the tlist tags - with or without boardid.

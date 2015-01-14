@@ -80,6 +80,21 @@ public function viewtopic_add($event)
 function make_list($message, $forum_id)
 {
 $forum_id;
+$lista_topics=$this->db->sql_query("SELECT tt.topic_id, tt.forum_id, tt.topic_title, tt.topic_time, tt.topic_moved_id, tt.topic_first_poster_name,
+    ft.forum_id, ft.forum_name
+    FROM " . TOPICS_TABLE . " tt, " . FORUMS_TABLE . " ft 
+    WHERE tt.topic_moved_id = 0
+    AND tt.topic_type <= $topic_important
+    AND tt.forum_id = ft.forum_id
+    AND tt.topic_visibility=1
+    AND ft.forum_id=$forum_id");
+while($topics=$this->db->sql_fetchrow($lista_topics))
+{
+$titolo_topic=$topics['topic_title'];
+$autore_topic=$topics['topic_first_poster_name'];
+$data_topic=date("d/m",$row1['topic_time']); 
+}
+    
 $topic_list="Futura Topic List";
 $message=str_replace("[tlist][/tlist]", "$topic_list", "$message");
 return $message;

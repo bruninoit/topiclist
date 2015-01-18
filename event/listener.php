@@ -82,11 +82,13 @@ $post_id=$rowmessage['POST_ID'];
 //query
 
 $forum_id=13;//ris query
-
-
-$topic_list="Futura Topic Lista";
-$topic_list .= "<table border=\"2\"><tr align=\"center\"><th>{L_TOPIC_TITLE}</th><th>{L_TOPIC_AUTHOR}</th><th>{L_TOPIC_DATE}</th></tr>";
-$lista_topics=$this->db->sql_query("SELECT tt.topic_id, tt.forum_id, tt.topic_title, tt.topic_time, tt.topic_moved_id, tt.topic_first_poster_name,
+define("TOPIC_LIST", "Topic List");
+define("TOPIC_TITLE", "Titolo");
+define("TOPIC_AUTHOR", "Autore");
+define("TOPIC_DATE", "Data");
+$topic_list="<h3>" .TOPIC_LIST. "</h3>";
+$topic_list .= "<table border=\"2\"><tr align=\"center\"><th width=\"150\"><b>" .TOPIC_TITLE. "</b></th><th width=\"150\"><b>" .TOPIC_AUTHOR. "</b></th><th width=\"150\"><b>" .TOPIC_DATE. "</b></th></tr>";
+$lista_topics=$this->db->sql_query("SELECT tt.topic_id, tt.forum_id, tt.topic_title, tt.topic_time, tt.topic_moved_id, tt.topic_poster, tt.topic_first_poster_name,
     ft.forum_id, ft.forum_name
     FROM " . TOPICS_TABLE . " tt, " . FORUMS_TABLE . " ft 
     WHERE tt.topic_moved_id = 0
@@ -99,8 +101,12 @@ while($topics=$this->db->sql_fetchrow($lista_topics))
 {
 $titolo_topic=$topics['topic_title'];
 $autore_topic=$topics['topic_first_poster_name'];
-$data_topic=date("d/m",$topics['topic_time']); 
-$topic_list.="<tr align=\"center\"><td>$titolo_topic</td><td>$autore_topic</td><td>$data_topic</td></tr>";
+$id_autore_topic=$topics['topic_poster'];
+$id_topic=$topics['topic_id'];
+//$data_topic=date("d/m",$topics['topic_time']); 
+
+$data_topic=$this->user->format_date($topics['topic_time']);
+$topic_list.="<tr align=\"center\"><td><a href=\"{$this->root_path}viewtopic.{$this->phpEx}?t=$id_topic\">$titolo_topic</a></td><td><a href=\"{$this->root_path}memberlist.{$this->phpEx}?mode=viewprofile&u=$id_autore_topic\">$autore_topic</a></td><td>$data_topic</td></tr>";
 }
 $topic_list.="</table>";
 $message=str_replace("[tlist][/tlist]", "$topic_list", "$message");

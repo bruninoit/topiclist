@@ -58,6 +58,7 @@ static public function getSubscribedEvents()
 return array(			
 'core.user_setup'						=> 'setup',
 'core.viewtopic_modify_post_row' => 'viewtopic_add',
+'core.common' => 'make_list',
 );	
 }
 
@@ -71,11 +72,6 @@ $lang_set_ext = $event['lang_set_ext'];
 		$event['lang_set_ext'] = $lang_set_ext;
 }
 
-
-
-
-public function viewtopic_add($event)	
-{
 
 function make_list($message, $forum_id)
 {
@@ -101,6 +97,8 @@ $message=str_replace("[tlist][/tlist]", "$topic_list", "$message");
 return $message;
 }
 
+public function viewtopic_add($event)	
+{
 
 //$array_topic_data=$event['post_row'];
 $rowmessage=$event['post_row'];

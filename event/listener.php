@@ -58,7 +58,6 @@ static public function getSubscribedEvents()
 return array(			
 'core.user_setup'						=> 'setup',
 'core.viewtopic_modify_post_row' => 'viewtopic_add',
-'core.common' => 'make_list',
 );	
 }
 
@@ -73,9 +72,20 @@ $lang_set_ext = $event['lang_set_ext'];
 }
 
 
-function make_list($message, $forum_id)
+public function viewtopic_add($event)	
 {
-	echo "<table border=\"1\"><tr align=\"center\"><th>{L_TOPIC_TITLE</th><th></th><th></th></tr>";
+
+//$array_topic_data=$event['post_row'];
+$rowmessage=$event['post_row'];
+$message=$rowmessage['MESSAGE'];
+$post_id=$rowmessage['POST_ID'];
+//query
+
+$forum_id=13;//ris query
+
+
+$topic_list="Futura Topic Lista";
+$topic_list .= "<table border=\"2\"><tr align=\"center\"><th>{L_TOPIC_TITLE}</th><th>{L_TOPIC_AUTHOR}</th><th>{L_TOPIC_DATE}</th></tr>";
 $lista_topics=$this->db->sql_query("SELECT tt.topic_id, tt.forum_id, tt.topic_title, tt.topic_time, tt.topic_moved_id, tt.topic_first_poster_name,
     ft.forum_id, ft.forum_name
     FROM " . TOPICS_TABLE . " tt, " . FORUMS_TABLE . " ft 
@@ -89,25 +99,14 @@ while($topics=$this->db->sql_fetchrow($lista_topics))
 {
 $titolo_topic=$topics['topic_title'];
 $autore_topic=$topics['topic_first_poster_name'];
-$data_topic=date("d/m",$row1['topic_time']); 
+$data_topic=date("d/m",$topics['topic_time']); 
 $topic_list.="<tr align=\"center\"><td>$titolo_topic</td><td>$autore_topic</td><td>$data_topic</td></tr>";
 }
-$topic_list="Futura Topic List";
+$topic_list.="</table>";
 $message=str_replace("[tlist][/tlist]", "$topic_list", "$message");
-return $message;
-}
 
-public function viewtopic_add($event)	
-{
 
-//$array_topic_data=$event['post_row'];
-$rowmessage=$event['post_row'];
-$message=$rowmessage['MESSAGE'];
-$post_id=$rowmessage['POST_ID'];
-//query
-
-$forum_id=1;//ris query
-$rowmessage['MESSAGE']=make_list($message, $forum_id);
+$rowmessage['MESSAGE']=$message;
 $event['post_row'] = $rowmessage;
 }
 

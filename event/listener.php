@@ -80,7 +80,10 @@ $rowmessage=$event['post_row'];
 $message=$rowmessage['MESSAGE'];
 $post_id=$rowmessage['POST_ID'];
 //query
-
+$lista_topics=$this->db->sql_query("SELECT forum_id
+    FROM " . POSTS_TABLE . "
+    WHERE post_id = $post_id");
+    
 $forum_id=13;//ris query
 define("TOPIC_LIST", "Topic List");
 define("TOPIC_TITLE", "Titolo");

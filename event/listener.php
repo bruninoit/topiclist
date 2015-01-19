@@ -75,6 +75,13 @@ $lang_set_ext = $event['lang_set_ext'];
 public function viewtopic_add($event)	
 {
 
+//costanti di lingua momentanee
+define("TOPIC_LIST", "Topic List");
+define("TOPIC_TITLE", "Titolo");
+define("TOPIC_AUTHOR", "Autore");
+define("TOPIC_DATE", "Data");
+define("NO_TOPIC", "Nessun Topic");
+
 //$array_topic_data=$event['post_row'];
 $rowmessage=$event['post_row'];
 $message=$rowmessage['MESSAGE'];
@@ -84,10 +91,6 @@ $forum_query=$this->db->sql_query("SELECT forum_id
     WHERE post_id = $post_id");
     $forum_id_array=$this->db->sql_fetchrow($forum_query);
 $forum_id=$forum_id_array['forum_id'];
-define("TOPIC_LIST", "Topic List");
-define("TOPIC_TITLE", "Titolo");
-define("TOPIC_AUTHOR", "Autore");
-define("TOPIC_DATE", "Data");
 $topic_list="<h3>" .TOPIC_LIST. "</h3>";
 $topic_list .= "<table border=\"2\"><tr align=\"center\"><th width=\"150\"><b>" .TOPIC_TITLE. "</b></th><th width=\"150\"><b>" .TOPIC_AUTHOR. "</b></th><th width=\"150\"><b>" .TOPIC_DATE. "</b></th></tr>";
 $lista_topics=$this->db->sql_query("SELECT tt.topic_id, tt.forum_id, tt.topic_title, tt.topic_time, tt.topic_moved_id, tt.topic_poster, tt.topic_first_poster_name,

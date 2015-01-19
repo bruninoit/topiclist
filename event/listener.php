@@ -83,7 +83,7 @@ $forum_query=$this->db->sql_query("SELECT forum_id
     FROM " . POSTS_TABLE . "
     WHERE post_id = $post_id");
     $forum_id_array=$this->db->sql_fetchrow($forum_query);
-$forum_id=$forum_id_array[forum_id];
+$forum_id=$forum_id_array['forum_id'];
 define("TOPIC_LIST", "Topic List");
 define("TOPIC_TITLE", "Titolo");
 define("TOPIC_AUTHOR", "Autore");

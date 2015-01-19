@@ -1,7 +1,7 @@
 {
 "name": "staffit/topiclist",
 "type": "phpbb-extension",
-"description": "Aggiunge due bbcode che creano liste di topic, dentro ad altri topic",
+"description": "Aggiunge il bbcode [tlist][/tlist] che se inserito in un topic crea una list dei topic della sezione in cui è inserito",
 "homepage": "https://github.com/bruninoit/topiclist",
 "version": "0.1.0-a1",
 "time": "2014-12-25",
@@ -11,12 +11,6 @@
 "name": "brunino",
 "email": "brunino@altervista.org",
 "homepage": "http://www.brunino.altervista.org",
-"role": "Developer"
-},
-{
-"name": "micogian",
-"email": "giannidose@tin.it",
-"homepage": "http://www.giannidose.altervista.org",
 "role": "Developer"
 },
 {

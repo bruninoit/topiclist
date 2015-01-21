@@ -101,7 +101,7 @@ $lista_topics=$this->db->sql_query("SELECT tt.topic_id, tt.forum_id, tt.topic_ti
     AND tt.forum_id = ft.forum_id
     AND tt.topic_visibility=1
     AND ft.forum_id=$forum_id
-    ORDER BY tt.topic_title DESC");
+    ORDER BY tt.topic_title ASC");
 while($topics=$this->db->sql_fetchrow($lista_topics))
 {
 $titolo_topic=$topics['topic_title'];

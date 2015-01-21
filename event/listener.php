@@ -60,7 +60,6 @@ return array(
 'core.viewtopic_modify_post_row' => 'viewtopic_add',
 );	
 }
-
 public function setup($event)	{	
 //language start
 $lang_set_ext = $event['lang_set_ext'];
@@ -70,18 +69,19 @@ $lang_set_ext = $event['lang_set_ext'];
 		);
 		$event['lang_set_ext'] = $lang_set_ext;
 }
-
-
 public function viewtopic_add($event)	
 {
-
 //costanti di lingua momentanee
-define("TOPIC_LIST", "Topic List");
-define("TOPIC_TITLE", "Titolo");
-define("TOPIC_AUTHOR", "Autore");
-define("TOPIC_DATE", "Data");
-define("NO_TOPIC", "Nessun Topic");
-
+$l_topic_list=$this->user->lang['TOPIC_TITLE']; //da cambiare
+$l_topic_no=$this->user->lang['TOPIC_TITLE']; //da cambiare
+$l_topic_title=$this->user->lang['TOPIC_TITLE'];
+$l_topic_author=$this->user->lang['TOPIC_AUTHOR'];
+$l_topic_date=$this->user->lang['TOPIC_DATE'];
+define("TOPIC_LIST", "$l_topic_list");
+define("TOPIC_TITLE", "$l_topic_title");
+define("TOPIC_AUTHOR", "$l_topic_author");
+define("TOPIC_DATE", "$l_topic_date");
+define("NO_TOPIC", "$l_topic_no");
 //$array_topic_data=$event['post_row'];
 $rowmessage=$event['post_row'];
 $message=$rowmessage['MESSAGE'];
@@ -92,7 +92,7 @@ $forum_query=$this->db->sql_query("SELECT forum_id
     $forum_id_array=$this->db->sql_fetchrow($forum_query);
 $forum_id=$forum_id_array['forum_id'];
 $topic_list="<h3>" .TOPIC_LIST. "</h3>";
-$topic_list .= "<table border=\"2\"><tr align=\"center\"><th width=\"150\"><b>" .TOPIC_TITLE. "</b></th><th width=\"150\"><b>" .TOPIC_AUTHOR. "</b></th><th width=\"150\"><b>" .TOPIC_DATE. "</b></th></tr>";
+$topic_list .= "<table border=\"2\"><tr align=\"center\"><th width=\"300\"><b>" .TOPIC_TITLE. "</b></th><th width=\"200\"><b>" .TOPIC_AUTHOR. "</b></th><th width=\"200\"><b>" .TOPIC_DATE. "</b></th></tr>";
 $lista_topics=$this->db->sql_query("SELECT tt.topic_id, tt.forum_id, tt.topic_title, tt.topic_time, tt.topic_moved_id, tt.topic_poster, tt.topic_first_poster_name,
     ft.forum_id, ft.forum_name
     FROM " . TOPICS_TABLE . " tt, " . FORUMS_TABLE . " ft 
@@ -109,18 +109,12 @@ $autore_topic=$topics['topic_first_poster_name'];
 $id_autore_topic=$topics['topic_poster'];
 $id_topic=$topics['topic_id'];
 //$data_topic=date("d/m",$topics['topic_time']); 
-
 $data_topic=$this->user->format_date($topics['topic_time']);
 $topic_list.="<tr align=\"center\"><td><a href=\"{$this->root_path}viewtopic.{$this->phpEx}?t=$id_topic\">$titolo_topic</a></td><td><a href=\"{$this->root_path}memberlist.{$this->phpEx}?mode=viewprofile&u=$id_autore_topic\">$autore_topic</a></td><td>$data_topic</td></tr>";
 }
 $topic_list.="</table>";
 $message=str_replace("[tlist][/tlist]", "$topic_list", "$message");
-
-
 $rowmessage['MESSAGE']=$message;
 $event['post_row'] = $rowmessage;
 }
-
-
-
 }

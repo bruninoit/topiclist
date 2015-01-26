@@ -82,15 +82,29 @@ define("TOPIC_TITLE", "$l_topic_title");
 define("TOPIC_AUTHOR", "$l_topic_author");
 define("TOPIC_DATE", "$l_topic_date");
 define("NO_TOPIC", "$l_topic_no");
+
+if(strpos($message, "[tlist]"))
+{
+
+echo $matches[1][0];
 //$array_topic_data=$event['post_row'];
 $rowmessage=$event['post_row'];
 $message=$rowmessage['MESSAGE'];
 $post_id=$rowmessage['POST_ID'];
+
+preg_match_all("#\[tlist\](.*?)\[/tlist\]#", $message, $forum_id_from);
+if($forum_id_from[1][0])
+{
+$forum_id=$forum_id_from[1][0];
+}else{
 $forum_query=$this->db->sql_query("SELECT forum_id
     FROM " . POSTS_TABLE . "
     WHERE post_id = $post_id");
     $forum_id_array=$this->db->sql_fetchrow($forum_query);
 $forum_id=$forum_id_array['forum_id'];
+}
+
+
 $topic_list="<h3>" .TOPIC_LIST. "</h3>";
 $topic_list .= "<table border=\"2\"><tr align=\"center\"><th width=\"300\"><b>" .TOPIC_TITLE. "</b></th><th width=\"200\"><b>" .TOPIC_AUTHOR. "</b></th><th width=\"200\"><b>" .TOPIC_DATE. "</b></th></tr>";
 $lista_topics=$this->db->sql_query("SELECT tt.topic_id, tt.forum_id, tt.topic_title, tt.topic_time, tt.topic_moved_id, tt.topic_poster, tt.topic_first_poster_name,
@@ -114,7 +128,9 @@ $topic_list.="<tr align=\"center\"><td><a href=\"{$this->root_path}viewtopic.{$t
 }
 $topic_list.="</table>";
 $message=str_replace("[tlist][/tlist]", "$topic_list", "$message");
+$message=str_replace("[tlist]$forum_id[/tlist]", "$topic_list", "$message");
 $rowmessage['MESSAGE']=$message;
 $event['post_row'] = $rowmessage;
+}
 }
 }

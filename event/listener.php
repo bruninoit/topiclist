@@ -71,6 +71,8 @@ $lang_set_ext = $event['lang_set_ext'];
 }
 public function viewtopic_add($event)	
 {
+if(strpos($message, "[tlist]"))
+{
 //costanti di lingua momentanee
 $l_topic_list=$this->user->lang['TOPIC_TITLE']; //da cambiare
 $l_topic_no=$this->user->lang['TOPIC_TITLE']; //da cambiare
@@ -83,10 +85,7 @@ define("TOPIC_AUTHOR", "$l_topic_author");
 define("TOPIC_DATE", "$l_topic_date");
 define("NO_TOPIC", "$l_topic_no");
 
-if(strpos($message, "[tlist]"))
-{
 
-echo $matches[1][0];
 //$array_topic_data=$event['post_row'];
 $rowmessage=$event['post_row'];
 $message=$rowmessage['MESSAGE'];

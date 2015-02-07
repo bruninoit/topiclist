@@ -71,7 +71,11 @@ $lang_set_ext = $event['lang_set_ext'];
 }
 public function viewtopic_add($event)	
 {
-if(strpos($message, "[tlist]"))
+//$array_topic_data=$event['post_row'];
+$rowmessage=$event['post_row'];
+$message=$rowmessage['MESSAGE'];
+$post_id=$rowmessage['POST_ID'];
+if(strpos($message,"tlist]"))
 {
 //costanti di lingua momentanee
 $l_topic_list=$this->user->lang['TOPIC_TITLE']; //da cambiare
@@ -85,11 +89,6 @@ define("TOPIC_AUTHOR", "$l_topic_author");
 define("TOPIC_DATE", "$l_topic_date");
 define("NO_TOPIC", "$l_topic_no");
 
-
-//$array_topic_data=$event['post_row'];
-$rowmessage=$event['post_row'];
-$message=$rowmessage['MESSAGE'];
-$post_id=$rowmessage['POST_ID'];
 
 preg_match_all("#\[tlist\](.*?)\[/tlist\]#", $message, $forum_id_from);
 if($forum_id_from[1][0])
@@ -127,7 +126,7 @@ $topic_list.="<tr align=\"center\"><td><a href=\"{$this->root_path}viewtopic.{$t
 }
 $topic_list.="</table>";
 $message=str_replace("[tlist][/tlist]", "$topic_list", "$message");
-$message=str_replace("[tlist]$forum_id[/tlist]", "$topic_list", "$message");
+$message=str_replace("[tlist]" . $forum_id . "[/tlist]", "$topic_list", "$message");
 $rowmessage['MESSAGE']=$message;
 $event['post_row'] = $rowmessage;
 }
